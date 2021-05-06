@@ -7,6 +7,9 @@ data/kaggle
 data/PQG_ref
 data/dev.txt
 data/train.txt
+!data/results/CGMH
+!data/results/PQG
+!data/results/UPSA
 
 *.bin
 *.log
