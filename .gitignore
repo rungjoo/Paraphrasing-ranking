@@ -3,7 +3,6 @@ PQG-pytorch/
 Distinct-N/
 CGMH/
 
-data/downstream
 data/kaggle
 data/PQG_ref
 data/dev.txt
