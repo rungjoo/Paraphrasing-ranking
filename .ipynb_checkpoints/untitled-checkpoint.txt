@@ -1,9 +1,0 @@
-UPSA/
-PQG-pytorch/
-Distinct-N/
-CGMH/
-data/
-
-*.bin
-*.log
-*.ipynb
