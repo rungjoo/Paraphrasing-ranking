@@ -2,10 +2,12 @@ UPSA/
 PQG-pytorch/
 Distinct-N/
 CGMH/
-data/**
-!data/test_not_ref.txt
-!data/test.txt
-!data/results
+
+data/downstream
+data/kaggle
+data/PQG_ref
+data/dev.txt
+data/train.txt
 
 *.bin
 *.log
