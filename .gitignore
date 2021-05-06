@@ -3,6 +3,9 @@ PQG-pytorch/
 Distinct-N/
 CGMH/
 data/
+!data/test_not_ref.txt
+!data/test.txt
+!data/results
 
 *.bin
 *.log
