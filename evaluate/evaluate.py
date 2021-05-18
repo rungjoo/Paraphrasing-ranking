@@ -134,10 +134,10 @@ def main():
         f.close()
         ours_v3 = [x.strip() for x in ours_v3]
 
-        f = open('../data/results/ours_one.txt')
-        ours_one = f.readlines()
+        f = open('../data/results/M2M/M2M.txt')
+        M2M = f.readlines()
         f.close()
-        ours_one = [x.strip() for x in ours_one]
+        M2M = [x.strip() for x in ours_one]
 
         gold_sentences = [x.lower() for x in gold_sentences]
         input_sentences = [x.lower() for x in input_sentences] 
@@ -181,14 +181,16 @@ def main():
         fr.write("CGMH_10 ## bertscore: {}, bleurt: {}, isacrebleu: {}, wer: {}, ppl: {}".format(CGMH_10_bertscore, CGMH_10_bleurt, CGMH_10_isacrebleu, CGMH_10_wer, CGMH_10_ppl)+'\n')
         fr.write("CGMH_50 ## bertscore: {}, bleurt: {}, isacrebleu: {}, wer: {}, ppl: {}".format(CGMH_50_bertscore, CGMH_50_bleurt, CGMH_50_isacrebleu, CGMH_50_wer, CGMH_50_ppl)+'\n')    
 
+        M2M_bertscore, M2M_bleurt, M2M_isacrebleu, M2M_wer, M2M_ppl = score(M2M, gold_sentences, input_sentences)        
+        fr.write("M2M ## bertscore: {}, bleurt: {}, isacrebleu: {}, wer: {}, ppl: {}".format(M2M_bertscore, M2M_bleurt, M2M_isacrebleu, M2M_wer, M2M_ppl)+'\n')
+        
         ours_bertscore, ours_bleurt, ours_isacrebleu, ours_wer, ours_ppl = score(ours, gold_sentences, input_sentences)
 #         ours_v2_bertscore, ours_v2_bleurt, ours_v2_isacrebleu, ours_v2_wer, ours_v2_ppl = score(ours_v2, gold_sentences, input_sentences)
 #         ours_v3_bertscore, ours_v3_bleurt, ours_v3_isacrebleu, ours_v3_wer, ours_v3_ppl = score(ours_v3, gold_sentences, input_sentences)
-        ours_one_bertscore, ours_one_bleurt, ours_one_isacrebleu, ours_one_wer, ours_one_ppl = score(ours_one, gold_sentences, input_sentences)        
         fr.write("ours ## bertscore: {}, bleurt: {}, isacrebleu: {}, wer: {}, ppl: {}".format(ours_bertscore, ours_bleurt, ours_isacrebleu, ours_wer, ours_ppl)+'\n')
 #         fr.write("ours_v2 ## bertscore: {}, bleurt: {}, isacrebleu: {}, wer: {}, ppl: {}".format(ours_v2_bertscore, ours_v2_bleurt, ours_v2_isacrebleu, ours_v2_wer, ours_v2_ppl)+'\n')    
-#         fr.write("ours_v3 ## bertscore: {}, bleurt: {}, isacrebleu: {}, wer: {}, ppl: {}".format(ours_v3_bertscore, ours_v3_bleurt, ours_v3_isacrebleu, ours_v3_wer, ours_v3_ppl)+'\n')    
-        fr.write("ours_one ## bertscore: {}, bleurt: {}, isacrebleu: {}, wer: {}, ppl: {}".format(ours_one_bertscore, ours_one_bleurt, ours_one_isacrebleu, ours_one_wer, ours_one_ppl)+'\n')        
+#         fr.write("ours_v3 ## bertscore: {}, bleurt: {}, isacrebleu: {}, wer: {}, ppl: {}".format(ours_v3_bertscore, ours_v3_bleurt, ours_v3_isacrebleu, ours_v3_wer, ours_v3_ppl)+'\n')        
+    
         overlap_v3 = count_overlap(ours_v3, input_sentences)
         overlap_one = count_overlap(ours_one, input_sentences)
         fr.write("overlap ## overlap_v3: {}, overlap_one: {}".format(overlap_v3, overlap_one)+'\n')
@@ -199,16 +201,16 @@ def main():
         fr.write("reference ## bertscore: {}, bleurt: {}, isacrebleu: {}, wer: {}, ppl: {}".format(ref_bertscore, ref_bleurt, ref_isacrebleu, ref_wer, ref_ppl)+'\n')    
     
     elif dataset == "medical":
-#         fr.write("#################### medical ####################"+'\n')
-#         UPSA_bertscore, UPSA_bleurt, UPSA_isacrebleu, UPSA_wer, UPSA_ppl = score(UPSA, gold_sentences, input_sentences)        
-#         CGMH_10_bertscore, CGMH_10_bleurt, CGMH_10_isacrebleu, CGMH_10_wer, CGMH_10_ppl = score(CGMH_10, gold_sentences, input_sentences)
-#         CGMH_50_bertscore, CGMH_50_bleurt, CGMH_50_isacrebleu, CGMH_50_wer, CGMH_50_ppl = score(CGMH_50, gold_sentences, input_sentences)        
-#         fr.write("UPSA ## bertscore: {}, bleurt: {}, isacrebleu: {}, wer: {}, ppl: {}".format(UPSA_bertscore, UPSA_bleurt, UPSA_isacrebleu, UPSA_wer, UPSA_ppl)+'\n')
-#         fr.write("CGMH_10 ## bertscore: {}, bleurt: {}, isacrebleu: {}, wer: {}, ppl: {}".format(CGMH_10_bertscore, CGMH_10_bleurt, CGMH_10_isacrebleu, CGMH_10_wer, CGMH_10_ppl)+'\n')
-#         fr.write("CGMH_50 ## bertscore: {}, bleurt: {}, isacrebleu: {}, wer: {}, ppl: {}".format(CGMH_50_bertscore, CGMH_50_bleurt, CGMH_50_isacrebleu, CGMH_50_wer, CGMH_50_ppl)+'\n')         
-#         ours_medical_bertscore, ours_medical_bleurt, ours_medical_isacrebleu, ours_medical_wer, ours_medical_ppl = score(ours_medical, gold_sentences, input_sentences)        
-#         fr.write("ours_medical ## bertscore: {}, bleurt: {}, isacrebleu: {}, wer: {}, ppl: {}".format(ours_medical_bertscore, ours_medical_bleurt, \
-#                                                                                                       ours_medical_isacrebleu, ours_medical_wer, ours_medical_ppl)+'\n')    
+        fr.write("#################### medical ####################"+'\n')
+        UPSA_bertscore, UPSA_bleurt, UPSA_isacrebleu, UPSA_wer, UPSA_ppl = score(UPSA, gold_sentences, input_sentences)        
+        CGMH_10_bertscore, CGMH_10_bleurt, CGMH_10_isacrebleu, CGMH_10_wer, CGMH_10_ppl = score(CGMH_10, gold_sentences, input_sentences)
+        CGMH_50_bertscore, CGMH_50_bleurt, CGMH_50_isacrebleu, CGMH_50_wer, CGMH_50_ppl = score(CGMH_50, gold_sentences, input_sentences)        
+        fr.write("UPSA ## bertscore: {}, bleurt: {}, isacrebleu: {}, wer: {}, ppl: {}".format(UPSA_bertscore, UPSA_bleurt, UPSA_isacrebleu, UPSA_wer, UPSA_ppl)+'\n')
+        fr.write("CGMH_10 ## bertscore: {}, bleurt: {}, isacrebleu: {}, wer: {}, ppl: {}".format(CGMH_10_bertscore, CGMH_10_bleurt, CGMH_10_isacrebleu, CGMH_10_wer, CGMH_10_ppl)+'\n')
+        fr.write("CGMH_50 ## bertscore: {}, bleurt: {}, isacrebleu: {}, wer: {}, ppl: {}".format(CGMH_50_bertscore, CGMH_50_bleurt, CGMH_50_isacrebleu, CGMH_50_wer, CGMH_50_ppl)+'\n')         
+        ours_medical_bertscore, ours_medical_bleurt, ours_medical_isacrebleu, ours_medical_wer, ours_medical_ppl = score(ours_medical, gold_sentences, input_sentences)        
+        fr.write("ours_medical ## bertscore: {}, bleurt: {}, isacrebleu: {}, wer: {}, ppl: {}".format(ours_medical_bertscore, ours_medical_bleurt, \
+                                                                                                      ours_medical_isacrebleu, ours_medical_wer, ours_medical_ppl)+'\n')    
         
         input_bertscore, input_bleurt, input_isacrebleu, input_wer, input_ppl = score(input_sentences, gold_sentences, input_sentences)    
         ref_bertscore, ref_bleurt, ref_isacrebleu, ref_wer, ref_ppl = score(gold_sentences, gold_sentences, input_sentences)    

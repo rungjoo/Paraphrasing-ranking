@@ -22,7 +22,7 @@ def generate_one(src_text):
     return same_larges[0]
 
 def main():    
-    f = open('./data/QQP_test_not_ref.txt')
+    f = open('./data/medical.txt') # QQP_test_not_ref
     testset = f.readlines()
     f.close()
     testset = [x.strip() for x in testset]
@@ -30,7 +30,7 @@ def main():
     for x in tqdm(range(0, len(testset))):
         src_text = testset[x]
         generation = generate_one(src_text)
-        with open('./data/results/ours_one.txt', 'a') as fo:
+        with open('./data/results/M2M/M2M_medical.txt', 'a') as fo:
             fo.write(generation+'\n')
     
 if __name__ == '__main__':
