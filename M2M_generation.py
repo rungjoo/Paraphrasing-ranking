@@ -11,7 +11,7 @@ m2m_model_large.eval()
 m2m_tokenizer_large = M2M100Tokenizer.from_pretrained('/data/private/transformer/M2M_large')
 print("Model Lodaing")
 
-from m2m_generation import ParaFunc
+from generation import ParaFunc
 paraphrasing = ParaFunc(num_beams=1, no_repeat_ngram_size=3, num_return_sequences=1)
 
 def generate_one(src_text):
