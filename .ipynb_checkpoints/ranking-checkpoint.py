@@ -149,11 +149,25 @@ def ranking_cands(src_text, overlap_generations):
     
     return final_generation
 
-def main():    
-    f = open('./data/test_not_ref.txt')
-    testset = f.readlines()
-    f.close()
-    testset = [x.strip() for x in testset]
+def main():
+    dataset = "medical" # QQP
+    print('dataset: ', dataset)
+    
+    if dataset == "QQP":
+        save_path = './data/results/ours_v3.txt'
+        f = open('./data/QQP_test_not_ref.txt')
+        testset = f.readlines()
+        f.close()
+        testset = [x.strip() for x in testset]        
+    elif dataset == "medical":
+        save_path = './data/results/ours_medical.txt'
+        f = open('./data/medical.txt')
+        testline = f.readlines()
+        f.close()
+        testset = []
+        for line in testline:
+            q1 = line.split('\t')[0].strip()
+            testset.append(q1)
     
 #     for src_text in tqdm(testset):
     for x in tqdm(range(0, len(testset))):
@@ -161,14 +175,12 @@ def main():
         overlap_generations = generate_cands(src_text)
         if len(overlap_generations) < 3: # (v2: == 0)
             overlap_generations += generate_cands(src_text, variation=True)
-            with open('./data/results/ours_grammar_check_v3.txt', 'a') as fc:
-                fc.write('확인: '+str(x)+'\n')
                 
         if len(overlap_generations) == 0:
             final_generation = src_text
         else:
             final_generation = ranking_cands(src_text, overlap_generations)
-        with open('./data/results/ours_v3.txt', 'a') as fo:
+        with open(save_path, 'a') as fo:
             fo.write(final_generation+'\n')
         
         """Grammar Filtering"""

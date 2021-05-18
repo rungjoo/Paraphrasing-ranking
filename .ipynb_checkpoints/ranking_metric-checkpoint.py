@@ -5,6 +5,9 @@ from transformers import GPT2LMHeadModel, GPT2Tokenizer
 import torch
 import torch.nn.functional as F
 
+import sys, pdb
+sys.argv = sys.argv[:1]
+
 class MetFunc():
     def __init__(self):
         model_path = "/data/private/GPT/openai-gpt2/medium"

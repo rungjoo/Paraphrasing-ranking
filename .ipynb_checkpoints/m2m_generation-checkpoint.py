@@ -24,7 +24,7 @@ class ParaFunc():
         self.no_repeat_ngram_size = no_repeat_ngram_size
         self.num_return_sequences = num_return_sequences
     
-    def same_enc_dec(self, model, tokenizer, src_text, src_lang, variation=False):
+    def same_enc_dec(self, model, tokenizer, src_text, src_lang, variation=False, one_generation=False):
         tokenizer.src_lang = src_lang
         src_tokens = tokenizer.encode(src_text, return_tensors="pt").cuda()
 
@@ -45,7 +45,10 @@ class ParaFunc():
             forced_bos_token_id=tokenizer.get_lang_id(src_lang)
         )
         tgt_text = tokenizer.batch_decode(tgt_token, skip_special_tokens=True)
-
+        
+        if one_generation:
+            return tgt_text ## one_generation
+    
         src_chars = ''.join(src_text.split(' ')).lower()
         cands = []
         for tgt_text_sample in tgt_text:
@@ -61,7 +64,7 @@ class ParaFunc():
         if not variation:
             encoder_no_repeat = max(2, int(src_tokens.shape[1]/2))
         else:
-            encoder_no_repeat = 2        
+            encoder_no_repeat = 2   
         gen_token = model.generate(
             src_tokens, 
             max_length=src_tokens.shape[1]+10, 
