@@ -2,9 +2,9 @@ from tqdm import tqdm
 import math, pdb
 
 from transformers import M2M100Config, M2M100ForConditionalGeneration, M2M100Tokenizer
-m2m_model = M2M100ForConditionalGeneration.from_pretrained('/data/private/transformer/M2M').cuda() # M2M_large
+m2m_model = M2M100ForConditionalGeneration.from_pretrained('/data/private/transformer/M2M').cuda() # M2M_base
 m2m_model.eval()
-m2m_tokenizer = M2M100Tokenizer.from_pretrained('/data/private/transformer/M2M') # # M2M_large
+m2m_tokenizer = M2M100Tokenizer.from_pretrained('/data/private/transformer/M2M') # # M2M_base
 
 m2m_model_large = M2M100ForConditionalGeneration.from_pretrained('/data/private/transformer/M2M_large').cuda()
 m2m_model_large.eval()
@@ -112,7 +112,6 @@ def ranking_cands(src_text, overlap_generations):
             fluency_generations.append(generation)
             
     """Semantically Filtering"""
-    lower_src_text = src_text.lower()
     lower_fluency_generations = [sen.lower() for sen in fluency_generations]
 
     Bertscore_list = CalMet.CalBertScore(lower_src_text, lower_fluency_generations)
@@ -160,7 +159,7 @@ def main():
         f.close()
         testset = [x.strip() for x in testset]        
     elif dataset == "medical":
-        save_path = './data/results/ours_medical.txt'
+        save_path = './data/results/ours_medical.txt' # _v4
         f = open('./data/medical.txt')
         testline = f.readlines()
         f.close()
