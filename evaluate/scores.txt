@@ -22,3 +22,11 @@ ours_medical ## bertscore: 0.8949195785237736, bleurt: -0.48627981603551373, isa
 input ## bertscore: 0.9019202751124625, bleurt: -0.5231785194195435, isacrebleu: -4.263256414560601e-14, wer: 0.0, ppl: 191.72098987997362
 reference ## bertscore: 0.9999999799362318, bleurt: 0.9359067646380798, isacrebleu: 88.63216108823346, wer: 1.2748491576159033, ppl: 128.38050682213049
 overlap ## overlap_v3: 0, overlap_M2M: 56
+
+#################### medical ####################
+UPSA ## bertscore: 0, bleurt: -1.3505761845848887, isacrebleu: 89.41771591822639, wer: 0, ppl: 476.06887248150633
+CGMH_50 ## bertscore: 0, bleurt: -1.4054178372123267, isacrebleu: 88.94955332093778, wer: 0, ppl: 818.3068276715717
+M2M ## bertscore: 0, bleurt: -0.5609204446153808, isacrebleu: 35.68755426988565, wer: 0, ppl: 296.6715879646812
+ours_medical ## bertscore: 0, bleurt: -0.5082177095252072, isacrebleu: 68.73528031049582, wer: 0, ppl: 158.75916129209864
+input ## bertscore: 0, bleurt: -0.5231783451766675, isacrebleu: -4.263256414560601e-14, wer: 0, ppl: 249.10667843768604
+reference ## bertscore: 0, bleurt: 0.9359068207032099, isacrebleu: 88.63216108823346, wer: 0, ppl: 171.7860055069911

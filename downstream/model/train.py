@@ -19,15 +19,21 @@ from sklearn.metrics import precision_recall_fscore_support
 ## finetune DialoGPT
 def main():
     """Dataset Loading"""
-    dataset = args.dataset    
-    if dataset == 'hate_speech18':
-        train_path = '../paraphrase/'+dataset+'/'+dataset+'_train_split_norm.txt'
-        dev_path = '../paraphrase/'+dataset+'/'+dataset+'_dev_split_norm.txt'
-        test_path = '../paraphrase/'+dataset+'/'+dataset+'_test_split_norm.txt'
+    dataset = args.dataset
+    if args.m2m:
+        m2m_use = "_m2m"
     else:
-        train_path = '../paraphrase/'+dataset+'/'+dataset+'_train_split.txt'
-        dev_path = '../paraphrase/'+dataset+'/'+dataset+'_dev_split.txt'
-        test_path = '../paraphrase/'+dataset+'/'+dataset+'_test.txt'
+        m2m_use = ""
+    print("m2m data training?: ", args.m2m)
+        
+    if dataset == 'hate_speech18':
+        train_path = '../paraphrase/'+dataset+'/'+dataset+'_train_split_norm'+m2m_use+'.txt'
+        dev_path = '../paraphrase/'+dataset+'/'+dataset+'_dev_split_norm'+m2m_use+'.txt'
+        test_path = '../paraphrase/'+dataset+'/'+dataset+'_test_split_norm'+m2m_use+'.txt'
+    else:
+        train_path = '../paraphrase/'+dataset+'/'+dataset+'_train_split'+m2m_use+'.txt'
+        dev_path = '../paraphrase/'+dataset+'/'+dataset+'_dev_split'+m2m_use+'.txt'
+        test_path = '../paraphrase/'+dataset+'/'+dataset+'_test'+m2m_use+'.txt'
         
     train_dataset = AllDatasetLoader(train_path, args.sample)    
     train_dataloader = DataLoader(train_dataset, batch_size=1, shuffle=True, num_workers=4)       
@@ -93,6 +99,7 @@ def main():
         num_warmup_steps *= 2
     optimizer = torch.optim.AdamW(model.parameters(), lr=lr) # , eps=1e-06, weight_decay=0.01
     scheduler = get_linear_schedule_with_warmup(optimizer, num_warmup_steps=num_warmup_steps, num_training_steps=num_training_steps)
+    print("parphrase training: ", not args.train_original)
     
     """Input & Label Setting"""
     best_dev_acc, best_test_acc = 0, 0
@@ -222,6 +229,7 @@ if __name__ == '__main__':
     parser.add_argument('--f1', action='store_true', help='evalute acc or f1')
     parser.add_argument('--train_original', action='store_true', help='training dataset: original or paraphrase')
     parser.add_argument('--test_original', action='store_true', help='testing dataset: original or paraphrase')
+    parser.add_argument('--m2m', action='store_true', help='testing dataset: original or paraphrase')
         
     args = parser.parse_args()
     

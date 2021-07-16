@@ -6,16 +6,16 @@ import sys
 sys.argv = sys.argv[:1]
 
 from transformers import GPT2LMHeadModel, GPT2Tokenizer   
-model_path = "/data/private/GPT/openai-gpt2/medium"
+model_path = "/data/private/GPT/openai-gpt2/small" # medium
 gpt_model = GPT2LMHeadModel.from_pretrained(model_path).cuda() # gpt2-medium
 gpt_model.eval()
 gpt_tokenizer = GPT2Tokenizer.from_pretrained(model_path) # gpt2-medium
 
 """점수 평가"""
-bertscore_metric = load_metric('bertscore')
+# bertscore_metric = load_metric('bertscore')
 bleurt_metric = load_metric("bleurt") # bleurt-large-51
 sacrebleu_metric = load_metric('sacrebleu')
-wer_metric = load_metric("wer")
+# wer_metric = load_metric("wer")
 def score(predictions, references, input_sentences):
     predictions = [x.lower() for x in predictions]
     
@@ -36,61 +36,22 @@ def score(predictions, references, input_sentences):
         ppl_score = sum(PPL_list)/len(PPL_list)    
 
         """semantic evaluation"""
-        bertscore_list = bertscore_metric.compute(predictions=predictions, references=references, lang="en")['f1']
+        # bertscore_list = bertscore_metric.compute(predictions=predictions, references=references, lang="en")['f1']
         bleurt_list = bleurt_metric.compute(predictions=predictions, references=references)['scores']    
-        bertscore = sum(bertscore_list)/len(bertscore_list)
+        # bertscore = sum(bertscore_list)/len(bertscore_list)
         bleurt = sum(bleurt_list)/len(bleurt_list)
 
         """diversity evaluation"""
         isacrebleu_list = []
-        wer_list = []
+        # wer_list = []
         for pred, ref in zip(predictions, input_sentences):
             isacrebleu_list.append(100-sacrebleu_metric.compute(predictions=[pred], references=[[ref]])['score'])
-            wer_list.append(wer_metric.compute(predictions=[pred], references=[ref]))
+            # wer_list.append(wer_metric.compute(predictions=[pred], references=[ref]))
         isacrebleu = sum(isacrebleu_list)/len(isacrebleu_list)
-        wer = sum(wer_list)/len(wer_list)
+        # wer = sum(wer_list)/len(wer_list)
     
-    return bertscore, bleurt, isacrebleu, wer, ppl_score
-
-# def score_sum(predictions, references, input_sentences):
-#     predictions = [x.lower() for x in predictions]
-    
-#     with torch.no_grad():
-#         """fluency evaluation"""
-#         PPL_list = []
-#         for generation in predictions:
-#             lm_tokens = gpt_tokenizer.encode(generation, return_tensors="pt").cuda()
-#             output = gpt_model(lm_tokens)
-#             logit = output[0].squeeze(0)
-#             labels = lm_tokens.squeeze(0)[1:]
-#             preds = logit[:-1,:]
-
-#             loss = F.cross_entropy(preds, labels)
-#             # calculating perplexity
-#             perplexity = torch.exp(loss)
-#             PPL_list.append(perplexity.item())
-#         ppl_score = sum(PPL_list)/len(PPL_list)    
-
-#         """semantic evaluation"""
-#         bertscore_list = bertscore_metric.compute(predictions=predictions, references=references, lang="en")['f1']
-#         bleurt_list = bleurt_metric.compute(predictions=predictions, references=references)['scores']
-        
-#         for bertscore, bleurtscore in zip(bertscore_list, bleurt_list):
-            
-        
-#         bertscore = sum(bertscore_list)/len(bertscore_list)
-#         bleurt = sum(bleurt_list)/len(bleurt_list)
-
-#         """diversity evaluation"""
-#         isacrebleu_list = []
-#         wer_list = []
-#         for pred, ref in zip(predictions, input_sentences):
-#             isacrebleu_list.append(100-sacrebleu_metric.compute(predictions=[pred], references=[[ref]])['score'])
-#             wer_list.append(wer_metric.compute(predictions=[pred], references=[ref]))
-#         isacrebleu = sum(isacrebleu_list)/len(isacrebleu_list)
-#         wer = sum(wer_list)/len(wer_list)
-    
-#     return bertscore, bleurt, isacrebleu, wer, ppl_score
+    return 0, bleurt, isacrebleu, 0, ppl_score
+    # return bertscore, bleurt, isacrebleu, wer, ppl_score
 
 def count_overlap(predictions, input_sentences):    
     """overlap evaluation"""
@@ -164,16 +125,6 @@ def main():
         f.close()
         ours = [x.strip() for x in ours]
 
-        f = open('../data/results/extra/ours_v2.txt')
-        ours_v2 = f.readlines()
-        f.close()
-        ours_v2 = [x.strip() for x in ours_v2]
-
-        f = open('../data/results/ours_v3.txt')
-        ours_v3 = f.readlines()
-        f.close()
-        ours_v3 = [x.strip() for x in ours_v3]
-
         f = open('../data/results/M2M/M2M.txt')
         M2M = f.readlines()
         f.close()
@@ -220,10 +171,10 @@ def main():
         fr.write("edlps ## bertscore: {}, bleurt: {}, isacrebleu: {}, wer: {}, ppl: {}".format(edlps_bertscore, edlps_bleurt, edlps_siacrebleu, edlps_wer, edlps_ppl)+'\n')
 
         UPSA_bertscore, UPSA_bleurt, UPSA_isacrebleu, UPSA_wer, UPSA_ppl = score(UPSA, gold_sentences, input_sentences)
-        CGMH_10_bertscore, CGMH_10_bleurt, CGMH_10_isacrebleu, CGMH_10_wer, CGMH_10_ppl = score(CGMH_10, gold_sentences, input_sentences)
+#         CGMH_10_bertscore, CGMH_10_bleurt, CGMH_10_isacrebleu, CGMH_10_wer, CGMH_10_ppl = score(CGMH_10, gold_sentences, input_sentences)
         CGMH_50_bertscore, CGMH_50_bleurt, CGMH_50_isacrebleu, CGMH_50_wer, CGMH_50_ppl = score(CGMH_50, gold_sentences, input_sentences)
         fr.write("UPSA ## bertscore: {}, bleurt: {}, isacrebleu: {}, wer: {}, ppl: {}".format(UPSA_bertscore, UPSA_bleurt, UPSA_isacrebleu, UPSA_wer, UPSA_ppl)+'\n')
-        fr.write("CGMH_10 ## bertscore: {}, bleurt: {}, isacrebleu: {}, wer: {}, ppl: {}".format(CGMH_10_bertscore, CGMH_10_bleurt, CGMH_10_isacrebleu, CGMH_10_wer, CGMH_10_ppl)+'\n')
+#         fr.write("CGMH_10 ## bertscore: {}, bleurt: {}, isacrebleu: {}, wer: {}, ppl: {}".format(CGMH_10_bertscore, CGMH_10_bleurt, CGMH_10_isacrebleu, CGMH_10_wer, CGMH_10_ppl)+'\n')
         fr.write("CGMH_50 ## bertscore: {}, bleurt: {}, isacrebleu: {}, wer: {}, ppl: {}".format(CGMH_50_bertscore, CGMH_50_bleurt, CGMH_50_isacrebleu, CGMH_50_wer, CGMH_50_ppl)+'\n')    
 
         M2M_bertscore, M2M_bleurt, M2M_isacrebleu, M2M_wer, M2M_ppl = score(M2M, gold_sentences, input_sentences)        
@@ -247,29 +198,31 @@ def main():
     
     elif dataset == "medical":
         fr.write("#################### medical ####################"+'\n')
-#         UPSA_bertscore, UPSA_bleurt, UPSA_isacrebleu, UPSA_wer, UPSA_ppl = score(UPSA, gold_sentences, input_sentences)        
+        UPSA_bertscore, UPSA_bleurt, UPSA_isacrebleu, UPSA_wer, UPSA_ppl = score(UPSA, gold_sentences, input_sentences)        
 #         CGMH_10_bertscore, CGMH_10_bleurt, CGMH_10_isacrebleu, CGMH_10_wer, CGMH_10_ppl = score(CGMH_10, gold_sentences, input_sentences)
-#         CGMH_50_bertscore, CGMH_50_bleurt, CGMH_50_isacrebleu, CGMH_50_wer, CGMH_50_ppl = score(CGMH_50, gold_sentences, input_sentences)        
-#         fr.write("UPSA ## bertscore: {}, bleurt: {}, isacrebleu: {}, wer: {}, ppl: {}".format(UPSA_bertscore, UPSA_bleurt, UPSA_isacrebleu, UPSA_wer, UPSA_ppl)+'\n')
+        CGMH_50_bertscore, CGMH_50_bleurt, CGMH_50_isacrebleu, CGMH_50_wer, CGMH_50_ppl = score(CGMH_50, gold_sentences, input_sentences)        
+        fr.write("UPSA ## bertscore: {}, bleurt: {}, isacrebleu: {}, wer: {}, ppl: {}".format(UPSA_bertscore, UPSA_bleurt, UPSA_isacrebleu, UPSA_wer, UPSA_ppl)+'\n')
 #         fr.write("CGMH_10 ## bertscore: {}, bleurt: {}, isacrebleu: {}, wer: {}, ppl: {}".format(CGMH_10_bertscore, CGMH_10_bleurt, CGMH_10_isacrebleu, CGMH_10_wer, CGMH_10_ppl)+'\n')
-#         fr.write("CGMH_50 ## bertscore: {}, bleurt: {}, isacrebleu: {}, wer: {}, ppl: {}".format(CGMH_50_bertscore, CGMH_50_bleurt, CGMH_50_isacrebleu, CGMH_50_wer, CGMH_50_ppl)+'\n')         
+        fr.write("CGMH_50 ## bertscore: {}, bleurt: {}, isacrebleu: {}, wer: {}, ppl: {}".format(CGMH_50_bertscore, CGMH_50_bleurt, CGMH_50_isacrebleu, CGMH_50_wer, CGMH_50_ppl)+'\n')         
         
         M2M_bertscore, M2M_bleurt, M2M_isacrebleu, M2M_wer, M2M_ppl = score(M2M, gold_sentences, input_sentences)        
         fr.write("M2M ## bertscore: {}, bleurt: {}, isacrebleu: {}, wer: {}, ppl: {}".format(M2M_bertscore, M2M_bleurt, M2M_isacrebleu, M2M_wer, M2M_ppl)+'\n')        
         
-#         ours_medical_bertscore, ours_medical_bleurt, ours_medical_isacrebleu, ours_medical_wer, ours_medical_ppl = score(ours_medical, gold_sentences, input_sentences)        
-#         fr.write("ours_medical ## bertscore: {}, bleurt: {}, isacrebleu: {}, wer: {}, ppl: {}".format(ours_medical_bertscore, ours_medical_bleurt, \
-#                                                                                                       ours_medical_isacrebleu, ours_medical_wer, ours_medical_ppl)+'\n')    
+        ours_medical_bertscore, ours_medical_bleurt, ours_medical_isacrebleu, ours_medical_wer, ours_medical_ppl = score(ours_medical, gold_sentences, input_sentences)        
+        fr.write("ours_medical ## bertscore: {}, bleurt: {}, isacrebleu: {}, wer: {}, ppl: {}".format(ours_medical_bertscore, ours_medical_bleurt, \
+                                                                                                      ours_medical_isacrebleu, ours_medical_wer, ours_medical_ppl)+'\n')    
         
-#         input_bertscore, input_bleurt, input_isacrebleu, input_wer, input_ppl = score(input_sentences, gold_sentences, input_sentences)    
-#         ref_bertscore, ref_bleurt, ref_isacrebleu, ref_wer, ref_ppl = score(gold_sentences, gold_sentences, input_sentences)    
-#         fr.write("input ## bertscore: {}, bleurt: {}, isacrebleu: {}, wer: {}, ppl: {}".format(input_bertscore, input_bleurt, input_isacrebleu, input_wer, input_ppl)+'\n')
-#         fr.write("reference ## bertscore: {}, bleurt: {}, isacrebleu: {}, wer: {}, ppl: {}".format(ref_bertscore, ref_bleurt, ref_isacrebleu, ref_wer, ref_ppl)+'\n')         
+        input_bertscore, input_bleurt, input_isacrebleu, input_wer, input_ppl = score(input_sentences, gold_sentences, input_sentences)    
+        ref_bertscore, ref_bleurt, ref_isacrebleu, ref_wer, ref_ppl = score(gold_sentences, gold_sentences, input_sentences)    
+        fr.write("input ## bertscore: {}, bleurt: {}, isacrebleu: {}, wer: {}, ppl: {}".format(input_bertscore, input_bleurt, input_isacrebleu, input_wer, input_ppl)+'\n')
+        fr.write("reference ## bertscore: {}, bleurt: {}, isacrebleu: {}, wer: {}, ppl: {}".format(ref_bertscore, ref_bleurt, ref_isacrebleu, ref_wer, ref_ppl)+'\n')         
 
-#         overlap_medical = count_overlap(ours_medical, input_sentences)
-#         overlap_M2M = count_overlap(M2M, input_sentences)
-#         fr.write("overlap ## overlap_v3: {}, overlap_M2M: {}".format(overlap_medical, overlap_M2M)+'\n')        
+        overlap_medical = count_overlap(ours_medical, input_sentences)
+        overlap_M2M = count_overlap(M2M, input_sentences)
+        fr.write("overlap ## overlap_v3: {}, overlap_M2M: {}".format(overlap_medical, overlap_M2M)+'\n')        
     fr.close()
+    
+    print("### END ###")
 
 
 if __name__ == '__main__':

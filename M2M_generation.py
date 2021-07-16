@@ -37,8 +37,8 @@ def main():
     for x in tqdm(range(0, len(testset))):
         src_text = testset[x]
         generation = generate_one(src_text)
-        with open('./data/results/M2M/M2M.txt', 'a') as fo:
-#         with open('./data/results/M2M/M2M_base_medical.txt', 'a') as fo:        
+#         with open('./data/results/M2M/M2M.txt', 'a') as fo:
+        with open('./data/results/M2M/M2M_medical.txt', 'a') as fo: # _base
             fo.write(generation+'\n')
     
 if __name__ == '__main__':

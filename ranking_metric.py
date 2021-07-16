@@ -16,9 +16,9 @@ class MetFunc():
         self.gpt_model.eval()
         
         self.bertscore_metric = load_metric('bertscore')
-        self.sacrebleu_metric = load_metric('sacrebleu')
+        # self.sacrebleu_metric = load_metric('sacrebleu')
         self.wer_metric = load_metric("wer")
-        self.bleurt_metric = load_metric("bleurt") # bleurt-large-51
+        # self.bleurt_metric = load_metric("bleurt") # bleurt-large-51
         self.grammar_metric = language_tool_python.LanguageTool('en-US')
         
     def CalBertScore(self, src_text, generations):
@@ -69,5 +69,7 @@ class MetFunc():
             # calculating perplexity
             perplexity = torch.exp(loss)
             PPL_list.append(perplexity.item())
+            
+            del lm_tokens, output, logit, labels, preds
             
         return PPL_list

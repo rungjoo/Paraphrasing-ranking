@@ -1,5 +1,6 @@
 from tqdm import tqdm
 import math, pdb
+import argparse, logging
 
 from transformers import M2M100Config, M2M100ForConditionalGeneration, M2M100Tokenizer
 m2m_model = M2M100ForConditionalGeneration.from_pretrained('/data/private/transformer/M2M').cuda() # M2M_base
@@ -58,17 +59,17 @@ def ranking_cands(src_text, overlap_generations):
     lower_src_text = src_text.lower()
     lower_overlap_generations = [sen.lower() for sen in overlap_generations]
     
-    SBlueScore_list = CalMet.CalSacreBleu(lower_src_text, lower_overlap_generations)
+    # SBlueScore_list = CalMet.CalSacreBleu(lower_src_text, lower_overlap_generations)
     WerScore_list = CalMet.CalWer(lower_src_text, lower_overlap_generations)    
     
-    """v2, v3"""
-    iSBlueScore_list = [-score for score in SBlueScore_list]
-    if len(set(iSBlueScore_list)) == 1:
-        if iSBlueScore_list[0] != 0.0:
-            iSBlueScore_list = [score/iSBlueScore_list[0] for score in iSBlueScore_list]
-    else:
-        iSBlueScore_list = [score-min(iSBlueScore_list) for score in iSBlueScore_list]
-        iSBlueScore_list = [score/max(iSBlueScore_list) for score in iSBlueScore_list]
+#     iSBlueScore_list = [-score for score in SBlueScore_list]
+#     if len(set(iSBlueScore_list)) == 1:
+#         if iSBlueScore_list[0] != 0.0:
+#             iSBlueScore_list = [score/iSBlueScore_list[0] for score in iSBlueScore_list]
+#     else:
+#         iSBlueScore_list = [score-min(iSBlueScore_list) for score in iSBlueScore_list]
+#         iSBlueScore_list = [score/max(iSBlueScore_list) for score in iSBlueScore_list]
+    iSBlueScore_list = [0 for _ in range(len(WerScore_list))]    
     
     if len(set(WerScore_list)) == 1:
         if WerScore_list[0] != 0.0:
@@ -81,25 +82,14 @@ def ranking_cands(src_text, overlap_generations):
     for isblue_score, wer_score in zip(iSBlueScore_list, WerScore_list):
         diversity_score = isblue_score + wer_score
         diversity_score_list.append(diversity_score)        
-    """v2, v3"""    
-    
-    """v1"""        
-#     SBlueScore_list = [score/max(SBlueScore_list) for score in SBlueScore_list]
-#     WerScore_list = [score/max(WerScore_list) for score in WerScore_list]
 
-#     diversity_score_list = []
-#     for sblue_score, wer_score in zip(SBlueScore_list, WerScore_list):
-#         diversity_score = 1-sblue_score + wer_score
-#         diversity_score_list.append(diversity_score)
-    """v1"""
-
-    ## remove lower diversity (max 5)
+    ## remove lower diversity (max 5)    
     diversity_threshold = sorted(diversity_score_list, reverse=True)[min(5, math.floor(len(diversity_score_list)/2))]
     diversity_generations = []
     for generation, score in zip(overlap_generations, diversity_score_list):
         if score >= diversity_threshold:
             diversity_generations.append(generation)
-            
+    
     """Fluency Filtering"""
     lower_diversity_generation = [sen.lower() for sen in diversity_generations]
     PPL_list = CalMet.CalPPL(lower_diversity_generation)
@@ -115,26 +105,20 @@ def ranking_cands(src_text, overlap_generations):
     lower_fluency_generations = [sen.lower() for sen in fluency_generations]
 
     Bertscore_list = CalMet.CalBertScore(lower_src_text, lower_fluency_generations)
-    BleurtScore_list = CalMet.CalBleurt(lower_src_text, lower_fluency_generations)
+    # BleurtScore_list = CalMet.CalBleurt(lower_src_text, lower_fluency_generations)
     
-    """v2, v3"""
     if len(set(Bertscore_list)) == 1:
         Bertscore_list = [score/Bertscore_list[0] for score in Bertscore_list]
     else:
         Bertscore_list = [score-min(Bertscore_list) for score in Bertscore_list]
         Bertscore_list = [score/max(Bertscore_list) for score in Bertscore_list]   
 
-    if len(set(BleurtScore_list)) == 1:
-        BleurtScore_list = [score/BleurtScore_list[0] for score in BleurtScore_list]
-    else:        
-        BleurtScore_list = [score-min(BleurtScore_list) for score in BleurtScore_list] 
-        BleurtScore_list = [score/max(BleurtScore_list) for score in BleurtScore_list]        
-    """v2, v3"""
-    
-    """v1"""
-#     Bertscore_list = [score/max(Bertscore_list) for score in Bertscore_list]
-#     BleurtScore_list = [score/max(BleurtScore_list) for score in BleurtScore_list]   
-    """v1"""
+#     if len(set(BleurtScore_list)) == 1:
+#         BleurtScore_list = [score/BleurtScore_list[0] for score in BleurtScore_list]
+#     else:        
+#         BleurtScore_list = [score-min(BleurtScore_list) for score in BleurtScore_list] 
+#         BleurtScore_list = [score/max(BleurtScore_list) for score in BleurtScore_list]
+    BleurtScore_list = [0 for _ in range(len(Bertscore_list))]
     
     semantic_score_list = []
     for i, (bert_score, bleurt_score) in enumerate(zip(Bertscore_list, BleurtScore_list)):
@@ -153,7 +137,7 @@ def main():
     print('dataset: ', dataset)
     
     if dataset == "QQP":
-        save_path = './data/results/ours_v3.txt'
+        save_path = './data/results/ours.txt'
         f = open('./data/QQP_test_not_ref.txt')
         testset = f.readlines()
         f.close()
