@@ -1,1 +1,1 @@
-# Paraphrase via Ranking Many Candidates
+# Paraphrasing via Ranking Many Candidates
