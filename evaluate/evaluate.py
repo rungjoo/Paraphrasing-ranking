@@ -66,7 +66,7 @@ def count_overlap(predictions, input_sentences):
     return count
 
 def main():
-    dataset = 'medical'
+    dataset = 'QQP' # medical
     print("dataset: ", dataset)
         
     """테스트세트 받기"""
@@ -181,20 +181,16 @@ def main():
         fr.write("M2M ## bertscore: {}, bleurt: {}, isacrebleu: {}, wer: {}, ppl: {}".format(M2M_bertscore, M2M_bleurt, M2M_isacrebleu, M2M_wer, M2M_ppl)+'\n')
         
         ours_bertscore, ours_bleurt, ours_isacrebleu, ours_wer, ours_ppl = score(ours, gold_sentences, input_sentences)
-        ours_v2_bertscore, ours_v2_bleurt, ours_v2_isacrebleu, ours_v2_wer, ours_v2_ppl = score(ours_v2, gold_sentences, input_sentences)
-        ours_v3_bertscore, ours_v3_bleurt, ours_v3_isacrebleu, ours_v3_wer, ours_v3_ppl = score(ours_v3, gold_sentences, input_sentences)
         fr.write("ours ## bertscore: {}, bleurt: {}, isacrebleu: {}, wer: {}, ppl: {}".format(ours_bertscore, ours_bleurt, ours_isacrebleu, ours_wer, ours_ppl)+'\n')
-        fr.write("ours_v2 ## bertscore: {}, bleurt: {}, isacrebleu: {}, wer: {}, ppl: {}".format(ours_v2_bertscore, ours_v2_bleurt, ours_v2_isacrebleu, ours_v2_wer, ours_v2_ppl)+'\n')    
-        fr.write("ours_v3 ## bertscore: {}, bleurt: {}, isacrebleu: {}, wer: {}, ppl: {}".format(ours_v3_bertscore, ours_v3_bleurt, ours_v3_isacrebleu, ours_v3_wer, ours_v3_ppl)+'\n')        
     
         input_bertscore, input_bleurt, input_isacrebleu, input_wer, input_ppl = score(input_sentences, gold_sentences, input_sentences)    
         ref_bertscore, ref_bleurt, ref_isacrebleu, ref_wer, ref_ppl = score(gold_sentences, gold_sentences, input_sentences)    
         fr.write("input ## bertscore: {}, bleurt: {}, isacrebleu: {}, wer: {}, ppl: {}".format(input_bertscore, input_bleurt, input_isacrebleu, input_wer, input_ppl)+'\n')
         fr.write("reference ## bertscore: {}, bleurt: {}, isacrebleu: {}, wer: {}, ppl: {}".format(ref_bertscore, ref_bleurt, ref_isacrebleu, ref_wer, ref_ppl)+'\n')    
         
-        overlap_v3 = count_overlap(ours_v3, input_sentences)
+        overlap_ours = count_overlap(ours, input_sentences)
         overlap_M2M = count_overlap(M2M, input_sentences)
-        fr.write("overlap ## overlap_v3: {}, overlap_M2M: {}".format(overlap_v3, overlap_M2M)+'\n')        
+        fr.write("overlap ## overlap_ours: {}, overlap_M2M: {}".format(overlap_ours, overlap_M2M)+'\n')        
     
     elif dataset == "medical":
         fr.write("#################### medical ####################"+'\n')

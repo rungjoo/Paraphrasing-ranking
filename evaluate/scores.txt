@@ -30,3 +30,13 @@ M2M ## bertscore: 0, bleurt: -0.5609204446153808, isacrebleu: 35.68755426988565,
 ours_medical ## bertscore: 0, bleurt: -0.5082177095252072, isacrebleu: 68.73528031049582, wer: 0, ppl: 158.75916129209864
 input ## bertscore: 0, bleurt: -0.5231783451766675, isacrebleu: -4.263256414560601e-14, wer: 0, ppl: 249.10667843768604
 reference ## bertscore: 0, bleurt: 0.9359068207032099, isacrebleu: 88.63216108823346, wer: 0, ppl: 171.7860055069911
+#################### QQP ####################
+edlp ## bertscore: 0, bleurt: -1.0660811604705949, isacrebleu: 86.84269198749647, wer: 0, ppl: 585.3841777984143
+edlps ## bertscore: 0, bleurt: -0.856684603581205, isacrebleu: 83.50441490737703, wer: 0, ppl: 597.0244169775168
+UPSA ## bertscore: 0, bleurt: -0.7286776233027379, isacrebleu: 65.7488936153203, wer: 0, ppl: 392.83325559840205
+CGMH_50 ## bertscore: 0, bleurt: -0.8423076925708601, isacrebleu: 65.3503942369682, wer: 0, ppl: 556.1629477054914
+M2M ## bertscore: 0, bleurt: 0.03628928903813163, isacrebleu: 43.53868754625173, wer: 0, ppl: 346.17039420688945
+ours ## bertscore: 0, bleurt: 0.08253149654194712, isacrebleu: 69.42145179433659, wer: 0, ppl: 171.61447043709754
+input ## bertscore: 0, bleurt: 0.1239857500050217, isacrebleu: 0.009999999999943228, wer: 0, ppl: 270.7808294111252
+reference ## bertscore: 0, bleurt: 1.0008386475026607, isacrebleu: 72.00245358346925, wer: 0, ppl: 278.1628854610443
+overlap ## overlap_ours: 0, overlap_M2M: 2524

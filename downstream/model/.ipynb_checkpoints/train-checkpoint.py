@@ -35,8 +35,10 @@ def main():
         dev_path = '../paraphrase/'+dataset+'/'+dataset+'_dev_split'+m2m_use+'.txt'
         test_path = '../paraphrase/'+dataset+'/'+dataset+'_test'+m2m_use+'.txt'
         
-    train_dataset = AllDatasetLoader(train_path, args.sample)    
+    # train_dataset = AllDatasetLoader(train_path, args.sample)
+    train_dataset = AllDatasetLoader(train_path)
     train_dataloader = DataLoader(train_dataset, batch_size=1, shuffle=True, num_workers=4)       
+    train_len = int(len(train_dataset)*args.sample)
     
     dev_dataset = AllDatasetLoader(dev_path)
     dev_dataloader = DataLoader(dev_dataset, batch_size=1, shuffle=False, num_workers=4)
@@ -108,6 +110,9 @@ def main():
     for epoch in tqdm(range(training_epochs)):
         model.train()
         for i_batch, (original, paraphrase, label) in enumerate(train_dataloader):
+            if i_batch > train_len:
+                break
+            
             original, paraphrase, label = original[0], paraphrase[0], label[0]
             label = torch.tensor([int(label)]).cuda()
                         
