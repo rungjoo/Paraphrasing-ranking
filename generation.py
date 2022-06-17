@@ -9,7 +9,6 @@ import argparse, logging
 
 from transformers import M2M100Config, M2M100ForConditionalGeneration, M2M100Tokenizer
 
-    
 class ParaFunc():
     def __init__(self, num_beams=10, no_repeat_ngram_size=3, num_return_sequences=5):
         super(ParaFunc, self).__init__()
