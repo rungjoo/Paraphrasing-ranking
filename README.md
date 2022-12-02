@@ -22,10 +22,16 @@ python3 train.py {--arguments}
 ## Citation
 
 ```bibtex
-@article{lee2021paraphrasing,
-  title={Paraphrasing via Ranking Many Candidates},
-  author={Lee, Joosung},
-  journal={arXiv preprint arXiv:2107.09274},
-  year={2021}
+@inproceedings{lee-2022-paraphrasing,
+    title = "Paraphrasing via Ranking Many Candidates",
+    author = "Lee, Joosung",
+    booktitle = "Proceedings of the 15th International Conference on Natural Language Generation",
+    month = jul,
+    year = "2022",
+    address = "Waterville, Maine, USA and virtual meeting",
+    publisher = "Association for Computational Linguistics",
+    url = "https://aclanthology.org/2022.inlg-main.6",
+    pages = "68--72",
+    abstract = "",
 }
 ```
